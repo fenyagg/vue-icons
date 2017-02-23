@@ -36,8 +36,7 @@
         }
     };
 
-    window.app = new Vue({
-        el: '#c-prop-icon',
+    Vue.component('c-prop-icon', {
         components: {
             "icon-group": iconGroupComponent
         },
@@ -51,10 +50,12 @@
                     </template>
 
                 </div>`,
-        data: {
-            icons       : [],
-            searchText  : "",
-            statusText  : "Загрузка шрифтов..."
+        data: function(){
+            return {
+                icons       : [],
+                searchText  : "",
+                statusText  : "Загрузка шрифтов..."
+            }
         },
         created: function () {
             this.$http.get('response.html').then(response => {
@@ -65,5 +66,4 @@
             });
         },
     });
-
 };

@@ -21,12 +21,17 @@
             padding: 20px;
         }
     </style>
+
+    <script src="script.js"></script>
 </head>
 <body>
     <div class="container">
-        <div id="c-prop-icon"></div>
-
-        <script src="script.js"></script>
+        <div id="c-prop-icon"><c-prop-icon></c-prop-icon></div>
+        <script>
+            new Vue({
+                el: '#c-prop-icon'
+            });
+        </script>
     </div>
 
 </body>
