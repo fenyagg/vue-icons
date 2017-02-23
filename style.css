@@ -1,0 +1,37 @@
+#c-prop-icon {
+
+}
+.c-prop-icon--popup {
+    width: 36em;
+    font-size: 14px;
+}
+.c-prop-icon--icon-group {
+    margin-bottom: 1em;
+}
+
+.c-prop-icon--title {
+    font-size: 1.4em;
+    margin: .4em 0;
+    color: #9E9E9E;
+}
+.c-prop-icon--list {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -.2em;
+}
+.c-prop-icon--item {
+    width: 5em;
+    height: 5em;
+    margin: .2em;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+}
+.c-prop-icon--item i {
+    font-size: 2.6em;
+    color: #607D8B;
+}
