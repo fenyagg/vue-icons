@@ -1,6 +1,6 @@
 ;{
     "use strict";
-    window.styleData = {};
+    let styleData = {};
 
     let iconGroupComponent = {
         props: ['groupName', 'searchText'],
@@ -18,8 +18,9 @@
                                     :index="index"
                                     :key="groupName.toLowerCase() + '_'+index"
                                     class="c-prop-icon--item"
+                                    @click.prevent="selectIcon(icon)"
                                     >
-                                     <i :data-icon="icon" :class="getClass(icon)"></i>
+                                     <i :data-icon="icon" :class="getClass(icon, groupName)"></i>
                                 </div>
                             </div>
                         </div>`,
@@ -37,56 +38,86 @@
                     icon
                 ];
             },
+            selectIcon: function(icon){
+                this.$parent.selectedGroupName = this.groupName;
+                this.$parent.selectedIcon = icon;
+                this.$parent.modalOpen = false;
+            }
         },
         mounted: function () {
             //нужно найти пустые иконки и удалить их
+            document.querySelector(".c-prop-icon--search-input").focus();
             this.$el.querySelectorAll("i").forEach( item => {
                 if(!item.offsetHeight) this.emptyIcons.push(item.getAttribute("data-icon"));
             });
         }
     };
 
+
     Vue.component('c-prop-icon', {
         components: {
-            "icon-group": iconGroupComponent
+            "icon-group": iconGroupComponent,
         },
         props: ['iconSourse'],
         template: `
-                <div class="c-prop-icon__popup">
-                    <div class="preloader" v-if="isLoading">Загрузка шрифтов...</div>
-
-                    <input type="text" v-model="searchText" v-if="!isLoading">
-                    <template v-for="(groupName, index) in styleData">
-                        <icon-group :search-text="searchText" :group-name="index" ></icon-group>
-                    </template>
-
+                <div class="c-prop-icon"">
+                    <div class="c-prop-icon--chosen-icon" v-html="btnText" v-if="selectedIcon">{{btnText}}</div>
+                    <button class="c-prop-icon--button" type="button" @click.prevent="openModal()">Выбрать иконку</button>
+                    
+                    <transition name="modal">
+                        <div class="c-prop-icon--popup" v-if="modalOpen">
+                                <div class="c-prop-icon--popup-overlay" @click.prevent="modalOpen = false"></div>
+                                <div class="c-prop-icon--popup-content">
+                                    <div class="preloader" v-if="isLoading">Загрузка шрифтов...</div>
+                
+                                    <input class="c-prop-icon--search-input" type="text" v-model="searchText" v-if="!isLoading" autofocus>
+                                    <template v-for="(groupName, index) in styleData">
+                                        <icon-group :search-text="searchText" :group-name="index" ></icon-group>
+                                    </template>
+                                </div>
+                        </div>
+                    </transition>
                 </div>`,
         data: function(){
             return {
+                selectedIcon: "",
+                selectedGroupName: "",
+                modalOpen   : false,
                 styleData   : styleData,
                 searchText  : "",
-                isLoading   : true,
+                isLoading   : 0,
                 errors      : []
             }
         },
+        computed:{
+            btnText : function () {
+                let baseClass = this.selectedGroupName ? styleData[this.selectedGroupName]["ICON_BASE_CLASS"] : "";
+                let html = `<i class="${baseClass} ${this.selectedIcon}"> &lt;i class="${baseClass} ${this.selectedIcon}"&gt;&lt;/i&gt;</i>`;
+                return this.selectedIcon && this.selectedGroupName ? html : "";
+            }
+        },
+        methods: {
+            openModal: function () {
+                this.modalOpen = true;
+            },
+        },
         created: function () {
-            for ( let iconName in this.iconSourse) {
+            for ( let iconData of this.iconSourse) {
+                let iconName = iconData.NAME;
                 if(!styleData[iconName]) {
-                    let iconData = this.iconSourse[iconName];
+                    this.isLoading++;
                     this.$http.get(iconData.SRC).then(response => {
                         let icons = response.body.match(new RegExp(`(${iconData.PREFIX}[a-zA_Z_1-9-]+)`, 'ig'));
                         if(!icons.length) this.errors.push( `В файле {iconData.SRC} иконки не найдены.`);
                         styleData[iconName] = iconData;
                         styleData[iconName]["ICONS"] = icons;
-                        this.isLoading = false;
+                        this.isLoading--;
                     }, response => {
-                        this.isLoading = false;
+                        this.isLoading--;
                         this.errors.push( `${iconData.SRC} Ошибка загрузки :(`);
                     });
                 }
             }
-
-
         },
     });
 };

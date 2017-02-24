@@ -19,6 +19,8 @@
             width: 1200px;
             margin: auto;
             padding: 20px;
+            max-width: 100%;
+            box-sizing: border-box;
         }
     </style>
 
@@ -32,18 +34,20 @@
                 el: '#c-prop-icon',
                 template: '<c-prop-icon :icon-sourse="iconSourse"></c-prop-icon>',
                 data: {
-                    iconSourse: {
-                        "Iconmoon": {
+                    iconSourse: [
+                        {
+                            "NAME": "Iconmoon",
                             "PREFIX": "icon-",
                             "ICON_BASE_CLASS": "",
                             "SRC": "https://i.icomoon.io/public/ba472d2098/Citrus/style.css"
                         },
-                        "Font-awesome": {
+                        {
+                            "NAME": "Font-awesome",
                             "PREFIX": "fa-",
                             "ICON_BASE_CLASS": "fa",
                             "SRC": "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
                         }
-                    }
+                    ]
                 }
             });
         </script>

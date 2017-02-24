@@ -1,9 +1,106 @@
 #c-prop-icon {
 
 }
+
+.c-prop-icon--chosen-icon {
+    white-space: nowrap;
+}
+.c-prop-icon--button {
+    background: none;
+    border-radius: .125em;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    display: inline-block;
+    line-height: 1;
+    outline: none;
+    overflow: hidden;
+    padding: .6em 1em;
+    position: relative;
+    text-transform: uppercase;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    user-select: none;
+    text-decoration: none;
+    -webkit-transition: padding .3s ease;
+    -o-transition: padding .3s ease;
+    transition: padding .3s ease;
+    background-color: #2196f3;
+    color: #fff;
+}
+
 .c-prop-icon--popup {
-    width: 36em;
-    font-size: 14px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+
+    -webkit-transition: opacity .3s ease;
+    -moz-transition: opacity .3s ease;
+    -ms-transition: opacity .3s ease;
+    -o-transition: opacity .3s ease;
+    transition: opacity .3s ease;
+}
+    /*modal animation*/
+    .modal-enter {
+        opacity: 0;
+    }
+    .modal-leave-active {
+        opacity: 0;
+    }
+    .modal-enter .c-prop-icon--popup-content,
+    .modal-leave-active .c-prop-icon--popup-content {
+        -webkit-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+
+.c-prop-icon--popup-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.c-prop-icon--popup-content {
+    font-size: 10px;
+
+    width: 92em;
+    height: calc(53.6em + 40px);
+    max-width: calc( 100% - 40px);
+    max-height: calc(100vh - 40px);
+    padding: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: white;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 20px;
+    bottom: 20px;
+    box-sizing: border-box;
+
+    -webkit-transition: transform .3s ease;
+    -moz-transition: transform .3s ease;
+    -ms-transition: transform .3s ease;
+    -o-transition: transform .3s ease;
+    transition: transform .3s ease;
+}
+
+.c-prop-icon--search-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 4px 10px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    color: #333;
+    margin-bottom: 12px;
 }
 .c-prop-icon--icon-group {
     margin-bottom: 1em;
