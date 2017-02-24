@@ -19,6 +19,7 @@
                                     :key="groupName.toLowerCase() + '_'+index"
                                     class="c-prop-icon--item"
                                     @click.prevent="selectIcon(icon)"
+                                    :title = "icon"
                                     >
                                      <i :data-icon="icon" :class="getClass(icon, groupName)"></i>
                                 </div>
