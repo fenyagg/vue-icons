@@ -26,10 +26,25 @@
 </head>
 <body>
     <div class="container">
-        <div id="c-prop-icon"><c-prop-icon></c-prop-icon></div>
+        <div id="c-prop-icon"></div>
         <script>
             new Vue({
-                el: '#c-prop-icon'
+                el: '#c-prop-icon',
+                template: '<c-prop-icon :icon-sourse="iconSourse"></c-prop-icon>',
+                data: {
+                    iconSourse: {
+                        "Iconmoon": {
+                            "PREFIX": "icon-",
+                            "ICON_BASE_CLASS": "",
+                            "SRC": "https://i.icomoon.io/public/ba472d2098/Citrus/style.css"
+                        },
+                        "Font-awesome": {
+                            "PREFIX": "fa-",
+                            "ICON_BASE_CLASS": "fa",
+                            "SRC": "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+                        }
+                    }
+                }
             });
         </script>
     </div>
