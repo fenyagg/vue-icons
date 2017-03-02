@@ -2,32 +2,43 @@
 
 }
 
+.c-prop-icon {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+}
+
+.c-prop-icon--clear-icon {
+    width: 15px;
+    height: 15px;
+    background: url("img/close.png") center center no-repeat;
+    position: absolute;
+    top: -3px;
+    left: 45px;
+}
+
 .c-prop-icon--chosen-icon {
     white-space: nowrap;
 }
 .c-prop-icon--button {
-    background: none;
-    border-radius: .125em;
-    border: none;
+    border: 1px solid rgb(135, 145, 156);
+    border-radius: 3px;
+    background-color: rgb(255, 255, 255);
+    font-size: 20px;
+    width: 2em;
+    height: 2em;
     cursor: pointer;
-    font-weight: 500;
-    display: inline-block;
-    line-height: 1;
-    outline: none;
-    overflow: hidden;
-    padding: .6em 1em;
     position: relative;
-    text-transform: uppercase;
-    -ms-touch-action: manipulation;
-    touch-action: manipulation;
-    user-select: none;
-    text-decoration: none;
-    -webkit-transition: padding .3s ease;
-    -o-transition: padding .3s ease;
-    transition: padding .3s ease;
-    background-color: #2196f3;
-    color: #fff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+.c-prop-icon--selected-icon-text {
+    margin-top: 4px;
+    font-size: 13px;
+}
+
 
 .c-prop-icon--popup {
     position: fixed;
@@ -37,11 +48,11 @@
     right: 0;
     z-index: 1;
 
-    -webkit-transition: opacity .3s ease;
-    -moz-transition: opacity .3s ease;
-    -ms-transition: opacity .3s ease;
-    -o-transition: opacity .3s ease;
-    transition: opacity .3s ease;
+    -webkit-transition: opacity .15s ease;
+    -moz-transition: opacity .15s ease;
+    -ms-transition: opacity .15s ease;
+    -o-transition: opacity .15s ease;
+    transition: opacity .15s ease;
 }
     /*modal animation*/
     .modal-enter {
@@ -63,7 +74,8 @@
     right: 0;
     bottom: 0;
     top: 0;
-    background-color: rgba(0, 0, 0, 0.4);
+    background: #fff url("img/8-4.jpg") no-repeat;
+    background-size: contain;
 }
 
 .c-prop-icon--popup-content {
@@ -85,12 +97,19 @@
     top: 20px;
     bottom: 20px;
     box-sizing: border-box;
+    box-shadow: 0 0 1px #ababab;
 
-    -webkit-transition: transform .3s ease;
-    -moz-transition: transform .3s ease;
-    -ms-transition: transform .3s ease;
-    -o-transition: transform .3s ease;
-    transition: transform .3s ease;
+    -webkit-transition: transform .15s ease;
+    -moz-transition: transform .15s ease;
+    -ms-transition: transform .15s ease;
+    -o-transition: transform .15s ease;
+    transition: transform .15s ease;
+}
+
+.c-prop-icon--input-group-wrap {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: calc(100% - 40px);
 }
 
 .c-prop-icon--search-input {
@@ -128,7 +147,15 @@
     align-items: center;
     justify-content: center;
 }
+.c-prop-icon--item._selected {
+    box-shadow: 0 0 2px 1px #cccccc;
+    background-color: rgba(96, 125, 139, 0.2);
+    border-color: rgba(96, 125, 139, 0.53);
+}
+
 .c-prop-icon--item i {
     font-size: 2.6em;
     color: #607D8B;
 }
+
+
