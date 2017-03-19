@@ -29,10 +29,12 @@
 <body>
     <div class="container">
         <div id="c-prop-icon"></div>
+
+
         <script>
             new Vue({
                 el: '#c-prop-icon',
-                template: '<c-prop-icon :icon-sourse="iconSourse"></c-prop-icon>',
+                template: '<c-prop-icon :icon-sourse="iconSourse" :selected-icon="selectedIcon"></c-prop-icon>',
                 data: {
                     iconSourse: [
                         {
@@ -47,8 +49,9 @@
                             "ICON_BASE_CLASS": "fa",
                             "SRC": "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
                         }
-                    ]
-                }
+                    ],
+                    selectedIcon: "fa fa-music"
+                },
             });
         </script>
     </div>

@@ -1,22 +1,35 @@
 ;{
     "use strict";
-    const styleData = {};
+    //TODO слить данные в 1 объект
+    const styleData = {
 
-    let iconGroupComponent = {
+    };
+    let pickedIcons = [];
+    const addPickedIcon = function (icon) {
+        if ( pickedIcons.includes(icon) ) return;
+        if(pickedIcons.length > 90) pickedIcons.pop();
+        pickedIcons.unshift(icon);
+        localStorage.pickedIcons = JSON.stringify(pickedIcons);
+    };
+
+    /**
+     * Локальный компонент группы иконок
+     */
+    const iconGroupComponent = {
         props: ['groupName', 'searchText', 'selectedIcon'],
         data: function () {
             return {
-                emptyIcons: styleData[this.groupName]["empty_icons"],
+                emptyIcons: styleData[this.groupName]["empty_icons"]
             }
         },
-        template: ` <div v-if="filterIcons.length" class="c-prop-icon--icon-group">
-                        <div class="c-prop-icon--title">{{ groupName }} ({{ groupPrefix }})</div>
-                        <div class="c-prop-icon--list">
+        template: ` <div v-if="filterIcons.length" class="c-prop-icon__icon-group">
+                        <div class="c-prop-icon__title">{{ groupName }} ({{ groupPrefix }})</div>
+                        <div class="c-prop-icon__list">
                             <div
                                 v-for="(icon, index) in filterIcons"
                                 :index="index"
                                 :key="groupName.toLowerCase() + '_'+index"
-                                :class="['c-prop-icon--item', {_selected : isSelected(icon)}]"
+                                :class="['c-prop-icon__item', {_selected : isSelected(icon)}]"
                                 @click.prevent="selectIcon(icon)"
                                 :title = "icon"
                                 >
@@ -39,19 +52,20 @@
                 return [
                     styleData[this.groupName]["ICON_BASE_CLASS"],
                     icon,
-
                 ];
             },
             isSelected: function (icon) {
                 return this.selectedIcon == styleData[this.groupName]["ICON_BASE_CLASS"]+" "+icon;
             },
             selectIcon: function(icon){
-                this.$parent.selectedIcon = styleData[this.groupName]["ICON_BASE_CLASS"]+" "+icon;
+                let addIcon = styleData[this.groupName]["ICON_BASE_CLASS"]+" "+icon;
+                this.$root.selectedIcon = addIcon;
                 this.$parent.modalOpen = false;
+                addPickedIcon(addIcon);
             }
         },
         mounted: function () {
-            let searchInput = document.querySelector(".c-prop-icon--search-input");
+            let searchInput = document.querySelector(".c-prop-icon__search-input");
             if(searchInput) searchInput.focus();
             //нужно найти пустые иконки и для фильтра
             if( !styleData[this.groupName]["check_empty"]) {
@@ -67,35 +81,90 @@
         }
     };
 
+    /**
+     * Локальный компонент пикнутых иконок
+     */
+    const pickedIconComponent = {
+        props: ['selectedIcon'],
+        template: ` <div v-if="pickedIcons.length" class="c-prop-icon__icon-group">
+                        <div class="c-prop-icon__title">Недавно выбранные</div>
+                        <div class="c-prop-icon__list">
+                            <div
+                                v-for="(icon, index) in pickedIcons"
+                                :index="index"
+                                :key="'picked-icon_'+index"
+                                :class="['c-prop-icon__item', {_selected : isSelected(icon)}]"
+                                @click.prevent="selectIcon(icon)"
+                                :title = "icon"
+                                >
+                                 <i :data-icon="icon" :class="icon"></i>
+                            </div>
+                        </div>
+                    </div>`,
+        data: function () {
+            return {
+                pickedIcons: pickedIcons
+            }
+        },
+        methods: {
+            isSelected: function (icon) {
+                return this.selectedIcon == icon;
+            },
+            selectIcon: function(icon){
+                this.$root.selectedIcon = icon;
+                this.$parent.modalOpen = false;
+                addPickedIcon(icon);
+            },
+        }
+    };
 
+    /**
+     * Глобальный компонент
+     */
     Vue.component('c-prop-icon', {
         components: {
             "icon-group": iconGroupComponent,
+            'picked-icons': pickedIconComponent
         },
-        props: ['iconSourse'],
+        props: ['iconSourse','selectedIcon'],
         template: `
-                <div class="c-prop-icon"">
-                    <button class="c-prop-icon--button" type="button" @click.prevent="openModal()">
+                <div class="c-prop-icon">
+                    <button class="c-prop-icon__button" type="button" @click.prevent="openModal()">
                         <i v-if="this.selectedIcon" :class="selectedIcon"></i>
                     </button>
-                    <div class="c-prop-icon--selected-icon-text" v-if="selectedIcon">{{selectedIcon}}</div>
-                    <a href="javascript:void(0);" class="c-prop-icon--clear-icon" @click.prevent="selectedIcon = ''"></a>
+                    <div class="c-prop-icon__selected-icon-text" v-if="selectedIcon">{{selectedIcon}}</div>
+                    <a href="javascript:void(0);" class="c-prop-icon__clear-icon" @click.prevent="selectedIcon = ''"></a>
                     
                     <transition name="modal">
-                        <div class="c-prop-icon--popup" v-if="modalOpen">
-                                <div class="c-prop-icon--popup-overlay" @click.prevent="modalOpen = false"></div>
-                                <div class="c-prop-icon--popup-content">
-                                    <div class="preloader" v-if="isLoading">Загрузка шрифтов...</div>
-                
-                                    <input class="c-prop-icon--search-input" type="text" v-model="searchText" v-if="!isLoading" autofocus>
-                                    <div class="c-prop-icon--input-group-wrap">
+                        <div class="c-prop-icon__popup" v-if="modalOpen">
+                                <div class="c-prop-icon__popup-overlay" @click.prevent="modalOpen = false"></div>
+                                <div class="c-prop-icon__popup-content">
+                                    <div class="c-prop-icon__header">
+                                        <input class="c-prop-icon__search-input" type="text" v-model="searchText" v-if="!isLoading" autofocus :disabled="viewMode == 'pickedIcons'">
+                                       
+                                        <div class="c-prop-icon__change-view">
+                                            <a :class="{_selected: viewMode == 'search' }" href="javascript:void(0);" @click.prevent="viewMode = 'search'">Все</a>
+                                            <a :class="[{_selected: viewMode == 'pickedIcons'}, { _disabled: !pickedIcons.length }]" href="javascript:void(0);" @click.prevent="viewMode = 'pickedIcons'">Недавно выбранные</a>
+                                        </div>
+                                    </div>
+                                                                        
+                                    <div class="c-prop-icon__input-group-wrap">
+                                        <div class="preloader" v-if="isLoading">Загрузка шрифтов...</div>
                                         <icon-group 
                                             v-for="(groupName, index) in styleData" 
                                             :search-text="searchText" 
                                             :selected-icon="selectedIcon"
                                             :group-name="index" 
-                                            :key="'icongroup_'+index"
+                                            :key = "'icongroup_'+index"
+                                            v-if = "viewMode == 'search'"
                                             ></icon-group>
+                                         <picked-icons
+                                            :selected-icon="selectedIcon"
+                                            v-if = "viewMode == 'pickedIcons'"
+                                            :picked-icons = "pickedIcons"
+                                         >
+                                         
+                                        </picked-icons>   
                                     </div>
                                 </div>
                         </div>
@@ -103,12 +172,13 @@
                 </div>`,
         data: function(){
             return {
-                selectedIcon: "",
                 modalOpen   : false,
                 styleData   : styleData,
                 searchText  : "",
                 isLoading   : 0,
-                errors      : []
+                errors      : [],
+                viewMode    : "search",
+                pickedIcons : pickedIcons
             }
         },
         methods: {
@@ -117,6 +187,7 @@
             },
         },
         created: function () {
+            //Добавим иконки в объект данных
             for ( let iconData of this.iconSourse) {
                 let iconName = iconData.NAME;
                 if(!styleData[iconName]) {
@@ -135,6 +206,10 @@
                         this.errors.push( `${iconData.SRC} Ошибка загрузки :(`);
                     });
                 }
+            }
+            if ( !!localStorage.pickedIcons ) {
+                pickedIcons = JSON.parse( localStorage.pickedIcons );
+                this.pickedIcons = pickedIcons;
             }
         },
     });
